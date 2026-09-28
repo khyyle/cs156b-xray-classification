@@ -1,0 +1,38 @@
+run_name: _corr_check_v4_plus_candidates
+model_class: radiology_cls.models.ensemble.EnsembleModel
+
+# Throwaway ensemble for the candidate-correlation gate. Adding the three
+# completed candidates (SigLIP 2, OmniRad, per-class ASL) on top of v4
+# so train() caches their val preds; we then run investigate_ensemble_errors
+# with --focus-member on each to compute its mean residual correlation
+# against the existing 15 v4 members. Not intended for LB submission.
+
+combiner: mean
+weights: null
+
+members:
+  - runs/dinov2-base-518-3class_20260523_022640
+  - runs/dinov2-base-518-pretrained_20260523_022631
+  - runs/dinov2-large-518-3class_20260523_022711
+  - runs/dinov2-base-3class_20260523_021136
+  - runs/dinov2-large-3class_20260523_021206
+  - runs/dinov2-base-pretrained_20260523_021126
+  - runs/dinov2-large-pretrained_20260523_021156
+  - runs/swinv2-base-3class-384_20260523_121038
+  - runs/swinv2-large-3class_20260523_021103
+  - runs/swinv2-large-3class-384-long_20260523_122234
+  - runs/dinov2-giant-3class_20260523_021238
+  - runs/dinov2-giant-pretrained_20260523_021228
+  - runs/convnextv2-large-pretrained_20260506_212044
+  - runs/densenet121-3class_20260520_224716
+  - runs/resnet101-3class_20260520_224800
+  - runs/siglip2-base-512-3class_20260526_153558
+  - runs/omnirad-base-518-3class_20260526_155425
+  - runs/dinov2-base-518-3class-asl-per-class_20260526_183607
+
+tta_transforms:
+  - identity
+  - hflip
+
+val_frac: 0.1
+seed: 42

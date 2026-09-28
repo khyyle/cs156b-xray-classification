@@ -1,0 +1,34 @@
+run_name: dinov2-base-pretrained
+model_class: radiology_cls.models.timm_cnn.TimmCNNModel
+architecture: vit_base_patch14_reg4_dinov2.lvd142m
+pretrained: true
+# DINOv2 native input is 224 (patch14 -> 16x16 patches). We use 256 here to
+# reuse the existing 256 image cache; TimmCNNModel.build_model passes
+# img_size=256 to timm so position embeddings interpolate cleanly. The
+# accuracy cost of this interpolation is negligible (<0.5% on standard
+# downstream benchmarks) and the cache speedup is huge.
+image_size: 256
+batch_size: 32
+# DINOv2 self-supervised features are sensitive to high LR during downstream
+# fine-tuning. Conservative recipe: lower lr + 2 warmup epochs to protect the
+# pretrained backbone while the new linear head finds its footing.
+lr: 5.0e-5
+epochs: 10
+dropout_prob: 0.0
+drop_path_rate: 0.1
+loss_type: mse
+weight_decay: 5.0e-2
+scheduler: cosine
+# LLRD-aware cosine: each layer's lr decays from its scaled initial down to
+# 0 over T_max. min_lr=1e-6 would invert the schedule for bottom layers
+# whose scaled lr is already below 1e-6 (LLRD shrinks lr by 0.75 per depth).
+min_lr: 0.0
+warmup_epochs: 2
+# Layer-wise LR decay (LLRD) for ViT fine-tuning: head gets full lr,
+# each successive transformer block gets lr * 0.75, patch embed gets
+# the smallest. Mirrors Meta's official DINOv2 fine-tuning recipe.
+llrd_decay: 0.75
+seed: 42
+val_frac: 0.1
+num_workers: 8
+strong_aug: true

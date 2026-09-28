@@ -1,0 +1,20 @@
+run_name: ensemble-example
+model_class: radiology_cls.models.ensemble.EnsembleModel
+
+# Replace <timestamp> with the run dirs your own training runs produced.
+# Members must share val_frac and seed so their val splits line up.
+members:
+  - runs/densenet121-pretrained_<timestamp>
+  - runs/densenet121-3class_<timestamp>
+  - runs/convnextv2-base-pretrained_<timestamp>
+combiner: mean
+weights: null
+
+# Optional test-time augmentation; op names are keys of
+# radiology_cls.preprocessing.TTA_OPS.
+tta_transforms:
+  - identity
+  - hflip
+
+val_frac: 0.1
+seed: 42

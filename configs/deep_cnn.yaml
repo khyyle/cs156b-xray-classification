@@ -1,0 +1,12 @@
+run_name: deep-cnn
+model_class: radiology_cls.models.deep_cnn.DeepCNNModel
+image_size: 256
+batch_size: 128
+lr: 4.0e-4
+epochs: 50
+dropout_prob: 0.2
+loss_type: smooth_l1
+weight_decay: 1.0e-4
+seed: 42
+val_frac: 0.1
+num_workers: 8

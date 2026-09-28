@@ -1,0 +1,17 @@
+run_name: resnet50-pretrained
+model_class: radiology_cls.models.torchvision_cnn.TorchvisionCNNModel
+architecture: resnet50
+pretrained: true
+image_size: 256
+batch_size: 64
+lr: 1.0e-4
+epochs: 15
+dropout_prob: 0.1
+loss_type: mse
+weight_decay: 1.0e-4
+scheduler: cosine
+min_lr: 1.0e-6
+warmup_epochs: 1
+seed: 42
+val_frac: 0.1
+num_workers: 8

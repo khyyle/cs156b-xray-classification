@@ -1,0 +1,10 @@
+model_class: radiology_cls.models.vanilla_cnn.VanillaCNNModel
+image_size: 256
+batch_size: 128
+lr: 4.0e-4
+epochs: 50
+dropout_prob: 0.2
+seed: 42
+val_frac: 0.1
+num_workers: 8
+uncertain_as: 1.0
